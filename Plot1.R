@@ -14,7 +14,7 @@ table(NEI$year)
 ##1999        2002           2005      2008 
 ##1,108,469   1,698,677   1,713,850   1,976,655 
 ## find missing sapply(NEI, function(x) sum(is.na(x)))
-### more observations in 2008 so need to get the same number for each year
+### more observations in 2008 so need to get the same readings across years, fips, type, pollutant
 Emissions1999 <- subset(NEI, year == 1999)
 Stdyear <- NEI[c(which(NEI$year == 1999)) ,] 
 
