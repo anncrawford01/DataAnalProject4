@@ -1,6 +1,8 @@
-##Plot 1
+##Plot2.R
 ## emissions https://www.epa.gov/air-emissions-inventories
 ## documentation of data https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei
+## Have total emissions form PM2.5 decreased in Baltimore City, Maryland, fips =24510
+## from 1999-2008
 
 
 # This first line will likely take a few seconds. Be patient!
@@ -9,34 +11,25 @@ SCC <- readRDS("./data/source_Classification_Code.rds")
 # NEI has 6,497,651 observations with 6 columns
 #Needs to be reduced or analyzed with better tools.
 # get the total Emissions for Each year
-##library(plyr)
-##table(NEI$year)
+library(plyr)
+table(NEI$year)
 ## number of observations per year
 ##1999        2002           2005      2008 
 ##1,108,469   1,698,677   1,713,850   1,976,655 
 
-##summary(NEI$Emissions)
-## Big variance in emission values.   - half the values are 0 ?
-##Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-##0.0      0.0      0.0      3.4      0.1 647000.0 
-
-## Big variance in emission values.   - half the values are 0 ?
-##Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-##0.0      0.0      0.0      3.4      0.1 647000.0 
-
 ## check for any missing  values
-##sapply(NEI, function(x) sum(is.na(x)))
+sapply(NEI, function(x) sum(is.na(x)))
 
-### get positvie Emmissions
-Emissions <- subset(NEI, Emissions > 0)
+### more observations in 2008 so need to get the same readings across years, fips, type, pollutant
+Emissions1999 <- subset(NEI, year == 1999)
 
+NEIBaltimore <- subset(NEI, fips == "24510")
 
 # Calculate totals of all Emissions for each year
-TotalPollution <- ddply(NEI, .(year), summarise,
+TotalPollution <- ddply(NEIBaltimore, .(year), summarise,
              totalemit = sum(Emissions, na.rm = TRUE))
 # Plot a line chart of the result
-plot(totalemit ~ year, type = "p", data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 United States "
-     )
+plot(totalemit ~ year, type = "l", data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 Baltimore ")
 
 
 
