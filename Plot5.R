@@ -9,8 +9,10 @@
 ## Dependencies
 ##library(plyr)
 ##install.packages("ggplot2")
-
 ##library(ggplot2)
+
+## http://stackoverflow.com/questions/8305754/remove-all-variables-except-functions
+rm(list = setdiff(ls(), lsf.str()))
 
 # This first line will likely take a few seconds. Be patient!
 NEI <- readRDS("./data/summarySCC_PM25.rds")
@@ -25,9 +27,9 @@ table(NEI$year)
 ##1,108,469   1,698,677   1,713,850   1,976,655 
 
 ## check for any missing  values
-sapply(NEI, function(x) sum(is.na(x)))
+##sapply(NEI, function(x) sum(is.na(x)))
 
-NEIBaltimore <- subset(NEI, fips == "24510")   ##im = 2096    7
+NEIBaltimore <- subset(NEI, fips == "24510")   ##dim = 2096    7
 
 # Calculate totals of all Emissions for each year
 TotalPollution <- ddply(NEIBaltimore, .(year, type), summarise,

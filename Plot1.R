@@ -3,13 +3,17 @@
 ## documentation of data https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei
 
 
+## remove all variables except functions
+## http://stackoverflow.com/questions/8305754/remove-all-variables-except-functions
+rm(list = setdiff(ls(), lsf.str()))
+
 # This first line will likely take a few seconds. Be patient!
 NEI <- readRDS("./data/summarySCC_PM25.rds")
 SCC <- readRDS("./data/source_Classification_Code.rds")
 # NEI has 6,497,651 observations with 6 columns
 #Needs to be reduced or analyzed with better tools.
 # get the total Emissions for Each year
-##library(plyr)
+library(plyr)
 ##table(NEI$year)
 ## number of observations per year
 ##1999        2002           2005      2008 
@@ -35,8 +39,8 @@ Emissions <- subset(NEI, Emissions > 0)
 TotalPollution <- ddply(NEI, .(year), summarise,
              totalemit = sum(Emissions, na.rm = TRUE))
 # Plot a line chart of the result
-plot(totalemit ~ year, type = "p", data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 United States "
-     )
+with(TotalPollution , plot(totalemit ~ year, type = "l", xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 United States "
+     ))
 
 
 
