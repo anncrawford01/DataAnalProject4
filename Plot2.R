@@ -1,7 +1,7 @@
 ##Plot2.R
 ## emissions https://www.epa.gov/air-emissions-inventories
 ## documentation of data https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei
-## Have total emissions form PM2.5 decreased in Baltimore City, Maryland, fips =24510
+## Have total emissions from PM2.5 decreased in Baltimore City, Maryland, fips =24510
 ## from 1999-2008
 ## remove all variables except functions
 ## http://stackoverflow.com/questions/8305754/remove-all-variables-except-functions

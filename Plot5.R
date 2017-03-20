@@ -36,15 +36,12 @@ TotalPollution <- ddply(NEIBaltimore, .(year, type), summarise,
              totalemit = sum(Emissions, na.rm = TRUE))
 TotalPollution$Type <-as.factor(TotalPollution$type)
 # Plot a line chart of the result
-qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 Baltimore by Type" ,
+qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM2.5 Baltimore by Type" ,
       color = Type, geom = "line")
 ## using facets
-qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 Baltimore by Type",
+qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM2.5 Baltimore by Type",
       facets = Type~. , geom = "line")
-## using smooth and actual points
-NEIBaltimore$Type <-as.factor(NEIBaltimore$type)
-qplot(year, Emissions, data = NEIBaltimore, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 Baltimore by Type",
-      facets = Type~. , alpha = .1) ### , geom_Smooth(method = "m"))
+
 
 
 
