@@ -10,8 +10,8 @@
 ## geom, coordin, data, asestheics
 ## Dependencies
 ##library(plyr)
+library(dplyr)
 ##install.packages("ggplot2")
-
 ##library(ggplot2)
 ## remove all variables except functions
 ## http://stackoverflow.com/questions/8305754/remove-all-variables-except-functions
@@ -29,15 +29,20 @@ coalSector <- SCC[grep("coal", SCC$EI.Sector, ignore.case = TRUE),]
 coalCombustion <- coalSector[grep("combustion", coalSector$SCC.Level.One, ignore.case = TRUE),]
 ##table(coalCombustion$SCC.Level.One)   ## this shows two level one values External Combustion Boilers  and Stationary Source Fuel Combustion
 coalCombustionEmission <-merge(coalCombustion, NEI, by.x = "SCC", by.y = "SCC")
+coalCombustionEmission <-transform(coalCombustionEmission, year = factor(year) )
 
 ## this shows a max of 14274.48, min = 0 and median = 70.75 - it is very skewed 
-## summary(coalCombustionEmission)
+## 
+
+boxplot(Emissions~year, coalCombustionEmission)
+hist(coalCombustionEmission$Emissions)
+xx <- coalCombustionEmission(x = Emissions, y = year) %>% dist %>% hclust
+
 
 
 ## using facets
-qplot( year, Emissions, data = coalCombustionEmission ,xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" , main = "U.S. Coal Combustion Emissions",
-    facets = SCC.Level.One~. , geom="point")
-qplot( fips, Emissions, data = coalCombustionEmission ,xlab = "state" , ylab = "Total PM2.5 Emissions (tons)" , main = "U.S. Coal Combustion Emissions",
-       facets = SCC.Level.One~. , geom="point")
+
+##qplot( fips, Emissions, data = coalCombustionEmission ,xlab = "state" , ylab = "Total PM2.5 Emissions (tons)" , main = "U.S. Coal Combustion Emissions",
+  ##     facets = SCC.Level.One~. , geom="point")
 
 
