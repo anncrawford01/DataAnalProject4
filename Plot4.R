@@ -34,8 +34,8 @@ coalCombustionEmission <-transform(coalCombustionEmission, year = factor(year) )
 ## this shows a max of 14274.48, min = 0 and median = 70.75 - it is very skewed 
 ## 
 
-boxplot(Emissions~year, coalCombustionEmission)
-hist(coalCombustionEmission$Emissions)
+boxplot(log10(Emissions)~year, coalCombustionEmission)
+hist(coalCombustionEmission$Emissions, year)
 xx <- coalCombustionEmission(x = Emissions, y = year) %>% dist %>% hclust
 
 

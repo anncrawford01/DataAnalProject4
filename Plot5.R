@@ -1,4 +1,4 @@
-##Plot 1
+##Plot 5
 ## emissions https://www.epa.gov/air-emissions-inventories
 ## documentation of data https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei
 
@@ -29,19 +29,37 @@ table(NEI$year)
 ## check for any missing  values
 ##sapply(NEI, function(x) sum(is.na(x)))
 
-NEIBaltimore <- subset(NEI, fips == "24510")   ##dim = 2096    7
+
+Mobile <- SCC[grep("Mobile", SCC$EI.Sector),] 
+Vehicle <- Mobile[grep("Vehicles", Mobile$SCC.Level.Two),] 
+VehicleEmission <-merge(Vehicle, NEI, by = "SCC")
+
+with(VehicleEmission, boxplot(log10(Emissions)~year) )
+
+VehicleEmissionDiesel <-VehicleEmission[grep("Diesel")]
+
+VehicleEmission <-transform(VehicleEmission, year = factor(year) )
 
 # Calculate totals of all Emissions for each year
-TotalPollution <- ddply(NEIBaltimore, .(year, type), summarise,
-             totalemit = sum(Emissions, na.rm = TRUE))
-TotalPollution$Type <-as.factor(TotalPollution$type)
-# Plot a line chart of the result
-qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM2.5 Baltimore by Type" ,
-      color = Type, geom = "line")
-## using facets
-qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM2.5 Baltimore by Type",
-      facets = Type~. , geom = "line")
+##TotalPollution <- ddply(VehicleEmission, .(year, type), summarise,
+##            totalemit = sum(Emissions, na.rm = TRUE))
+##TotalPollution$Type <-as.factor(VehicleEmission$SCC.Level.Two)
 
+# Plot a line chart of the result
+qplot(year, Emissions, data = VehicleEmission, ylab = "Total PM2.5 Emissions (tons)" , main =  "PM2.5 Vehicle Diesel and Gasloine ",
+      color = SCC.Level.Two, geom = "point")
+
+
+## using facets
+qplot(year, Emissions, data = VehicleEmission, ylab = "Total PM2.5 Emissions (tons)" , main = "PM2.5 Vehicle Diesel and Gasloine ",
+      facets = SCC.Level.Two~. , geom = "point")
+
+###Box plot
+## http://t-redactyl.io/blog/2016/04/creating-plots-in-r-using-ggplot2-part-10-boxplots.html
+
+p <- ggplot(VehicleEmission, aes(x=year, y=log10(Emissions)) ) + geom_boxplot() 
+       
+p  + facet_grid(. ~ SCC.Level.Two)
 
 
 

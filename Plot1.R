@@ -45,9 +45,19 @@ Emissions <- subset(NEI, Emissions > 0)
 # Calculate totals of all Emissions for each year
 TotalPollution <- ddply(NEI, .(year), summarise,
              totalemit = sum(Emissions, na.rm = TRUE))
+# Use Point since the totals are Discrete for each year not continuous  
 # Plot a line chart of the result
-with(TotalPollution , plot(totalemit ~ year, type = "l", xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 United States "
-     ))
+##with(TotalPollution , plot(totalemit ~ year, type = "p", pch = 20, xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 United States "
+ ##    ))
 
+## http://www.statmethods.net/graphs/bar.html
+with(TotalPollution , barplot(totalemit, pch = 10, xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" ,
+                              main = "Total PM2.5 United States ", names.arg = year
+))
+
+
+with(TotalPollution , boxplot(log10(totalemit), pch = 10, xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" ,
+                              main = "Total PM2.5 United States ", names.arg = year
+))
 
 

@@ -22,30 +22,38 @@ SCC <- readRDS("./data/source_Classification_Code.rds")
 
 # get the total Emissions for Each year
 
-table(NEI$year)
+##table(NEI$year)
 ## number of observations per year
 ##1999        2002           2005      2008 
 ##1,108,469   1,698,677   1,713,850   1,976,655 
 
-## check for any missing  values
-sapply(NEI, function(x) sum(is.na(x)))
+## No missing  values
+##sapply(NEI, function(x) mean(is.na(x)))
 
-NEIBaltimore <- subset(NEI, fips == "24510")   ##im = 2096    7
+##emissions from motor vehicle source
+Mobile <- SCC[grep("Mobile", SCC$EI.Sector),] 
+Vehicle <- Mobile[grep("Vehicles", Mobile$SCC.Level.Two),] 
+VehicleEmission <-merge(Vehicle, NEI, by = "SCC")
 
-# Calculate totals of all Emissions for each year
-TotalPollution <- ddply(NEIBaltimore, .(year, type), summarise,
-             totalemit = sum(Emissions, na.rm = TRUE))
-TotalPollution$Type <-as.factor(TotalPollution$type)
-# Plot a line chart of the result
-qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 Baltimore by Type" ,
-      color = Type, geom = "line")
-## using facets
-qplot(year, totalemit, data = TotalPollution, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 Baltimore by Type",
-      facets = Type~. , geom = "line")
-## using smooth and actual points
-NEIBaltimore$Type <-as.factor(NEIBaltimore$type)
-qplot(year, Emissions, data = NEIBaltimore, ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 Baltimore by Type",
-      facets = Type~. , alpha = .1) ### , geom_Smooth(method = "m"))
+
+
+VehicleEmission <-transform(VehicleEmission, year = factor(year) )
+
+VehicleEmissionBaltLA <-subset(VehicleEmission, fips == "24510" | fips == "06037" ) 
+##VehicleEmissionLA <- subset(VehicleEmission, fips == "06037" )
+
+
+
+###Box plot
+## http://t-redactyl.io/blog/2016/04/creating-plots-in-r-using-ggplot2-part-10-boxplots.html
+
+p <- ggplot(VehicleEmissionBalti, aes(x=year, y=log10(Emissions)) ) + geom_boxplot() 
+p  + facet_grid(. ~ SCC.Level.Two)
+
+
+p <- ggplot(VehicleEmissionBaltLA , aes(x=year, y=log10(Emissions)) ) + geom_boxplot() 
+p  + facet_grid(SCC.Level.Two~ fips)
+
 
 
 
