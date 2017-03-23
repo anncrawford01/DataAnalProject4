@@ -1,5 +1,9 @@
-##Plot 1
+## Plot1.R
 ## Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? 
+## Ann Crawford
+## 3/22/2017
+## Coursera Exploratory Data Analysis 
+##
 ## Using the base plotting system,
 ### https://github.com/DataScienceSpecialization/courses/
 
@@ -29,26 +33,11 @@ library(plyr)
 ##Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ##0.0      0.0      0.0      3.4      0.1 647000.0 
 
-## Big variance in emission values.   - half the values are 0 ?
-##Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-##0.0      0.0      0.0      3.4      0.1 647000.0 
-
-## check for any missing  values
-##sapply(NEI, function(x) sum(is.na(x)))
-
-
-
-### get positvie Emmissions
-Emissions <- subset(NEI, Emissions > 0)
-
 
 # Calculate totals of all Emissions for each year
 TotalPollution <- ddply(NEI, .(year), summarise,
              totalemit = sum(Emissions, na.rm = TRUE))
 # Use Point since the totals are Discrete for each year not continuous  
-# Plot a line chart of the result
-##with(TotalPollution , plot(totalemit ~ year, type = "p", pch = 20, xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" , main = "Total PM25 United States "
- ##    ))
 
 ## http://www.statmethods.net/graphs/bar.html
 with(TotalPollution , barplot(totalemit, pch = 10, xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" ,
@@ -56,8 +45,5 @@ with(TotalPollution , barplot(totalemit, pch = 10, xlab = "Year" , ylab = "Total
 ))
 
 
-with(TotalPollution , boxplot(log10(totalemit), pch = 10, xlab = "Year" , ylab = "Total PM2.5 Emissions (tons)" ,
-                              main = "Total PM2.5 United States ", names.arg = year
-))
-
-
+dev.copy(png, file = "plot1.png")   ## copy to png file
+dev.off()

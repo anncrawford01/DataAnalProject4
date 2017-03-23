@@ -1,4 +1,9 @@
-##Plot 6
+##Plot6.^
+## Compare emissions from motor vehicle sources in Baltimore City fips == "24510" 
+## with emissions from motor vehicle sources 
+## in Los Angeles County, California (fips == "06037").
+## Which city has seen greater changes over time in motor vehicle emissions?
+
 ## emissions https://www.epa.gov/air-emissions-inventories
 ## documentation of data https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei
 
@@ -46,13 +51,9 @@ VehicleEmissionBaltLA <-subset(VehicleEmission, fips == "24510" | fips == "06037
 
 ###Box plot
 ## http://t-redactyl.io/blog/2016/04/creating-plots-in-r-using-ggplot2-part-10-boxplots.html
-
-p <- ggplot(VehicleEmissionBalti, aes(x=year, y=log10(Emissions)) ) + geom_boxplot() 
-p  + facet_grid(. ~ SCC.Level.Two)
-
-
 p <- ggplot(VehicleEmissionBaltLA , aes(x=year, y=log10(Emissions)) ) + geom_boxplot() 
-p  + facet_grid(SCC.Level.Two~ fips)
+p <-p  + facet_grid(SCC.Level.Two~ fips)
+p +  ggtitle("Vehicle Emissions Baltimore and Los Angeles") + ylab("PM2.5 Emissions")
 
 
 
