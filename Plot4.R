@@ -69,7 +69,11 @@ coalStateEmissions <- merge(df1999, df2008, by = "statecode")
   ##     facets = SCC.Level.One~. , geom="point")
 
 ##http://docs.ggplot2.org/current/geom_boxplot.html
-plot(rep(1999,48), coalStateEmissions[,2] ,data = coalStateEmissions , xlim = c(1997, 2009), main = "state coal", xlab = "year" , ylim = c(100,600)  )
+plot(rep(1999,48), coalStateEmissions[,2] ,data = coalStateEmissions , xlim = c(1997, 2009), main = "state coal", xlab = "year" , ylim = c(300,1000)) 
+ points(rep(2008,48), coalStateEmissions[,3], data = coalStateEmissions ) 
+ segments(rep(1999,48), coalStateEmissions[,2] , rep(2008,48), coalStateEmissions[,3] )
+ 
+ plot(rep(1999,48), coalStateEmissions[,2] ,data = coalStateEmissions , xlim = c(1997, 2009), main = "state coal", xlab = "year" , ylim = c(0,300)) 
  points(rep(2008,48), coalStateEmissions[,3], data = coalStateEmissions ) 
  segments(rep(1999,48), coalStateEmissions[,2] , rep(2008,48), coalStateEmissions[,3] )
 

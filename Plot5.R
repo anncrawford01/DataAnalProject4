@@ -35,7 +35,7 @@ Mobile <- SCC[grep("Mobile", SCC$EI.Sector),]
 Vehicle <- Mobile[grep("Vehicles", Mobile$SCC.Level.Two),] 
 VehicleEmission <-merge(Vehicle, NEI, by = "SCC")
 
-VehicleEmissionDiesel <-VehicleEmission[grep("Diesel")]
+##VehicleEmissionDiesel <-VehicleEmission[grep("Diesel")]
 VehicleEmission <-transform(VehicleEmission, year = factor(year) )
 
 ###Box plot
