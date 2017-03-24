@@ -31,12 +31,14 @@ SCC <- readRDS("./data/source_Classification_Code.rds")
 ##1999        2002           2005      2008 
 ##1,108,469   1,698,677   1,713,850   1,976,655 
 
+##Motor Vehicle
 Mobile <- SCC[grep("Mobile", SCC$EI.Sector),] 
 Vehicle <- Mobile[grep("Vehicles", Mobile$SCC.Level.Two),] 
 VehicleEmission <-merge(Vehicle, NEI, by = "SCC")
-
-##VehicleEmissionDiesel <-VehicleEmission[grep("Diesel")]
 VehicleEmission <-transform(VehicleEmission, year = factor(year) )
+
+## get only Baltimore
+VehicleEmissionBaltLA <-subset(VehicleEmission, fips == "24510")
 
 ###Box plot
 ## http://t-redactyl.io/blog/2016/04/creating-plots-in-r-using-ggplot2-part-10-boxplots.html
@@ -45,7 +47,7 @@ VehicleEmission <-transform(VehicleEmission, year = factor(year) )
 ##p  + facet_grid( SCC.Level.Two ~ year)
 
 ## use color instead of facet
-p <- ggplot(VehicleEmission, aes(x=year, y=log10(Emissions)), ylab = "year") + geom_boxplot(aes(colour =  SCC.Level.Two, notch = TRUE ))
+p <- ggplot(VehicleEmissionBaltLA, aes(x=year, y=log10(Emissions)), ylab = "Year") + geom_boxplot(aes(colour =  SCC.Level.Two))
 p +  ggtitle("Vehicle Emissions Baltimore") + ylab("PM2.5 Emissions")
 
 dev.copy(png, file = "plot5.png")   ## copy to png file

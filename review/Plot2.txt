@@ -1,0 +1,24 @@
+# Have total emissions from PM2.5 decreased in the Baltimore City, Maryland 
+# (fips == "24510") from 1999 to 2008?
+# Use the base plotting system to make a plot answering this question.
+
+library(dplyr)
+
+get_data <- function() {
+download.file("https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip", "exdata%2Fdata%2FNEI_data.zip")
+unzip("exdata%2Fdata%2FNEI_data.zip")
+}
+
+get_data()
+emissions_data <- readRDS("summarySCC_PM25.rds")
+
+annual_emissions_baltimore_city <- filter(emissions_data, fips == "24510") %>%
+select(Emissions, year) %>%
+group_by(year) %>%
+summarise_each(funs = "sum")
+
+png("plot2.png")
+with(annual_emissions_baltimore_city, plot(year, Emissions, type = 'b',
+main = "Annual Emmissions for Baltimore city, Maryland",
+pch = 19, col = "red", lwd = 2))
+dev.off()

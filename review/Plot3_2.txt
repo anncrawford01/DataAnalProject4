@@ -1,0 +1,11 @@
+library(ggplot2)
+setwd( "C:/Users/betty/Desktop/coursera/exploratory data analysis/week-4")
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+totalemissionBaltimore<- aggregate(Emissions~year+type,NEI[NEI$fips=="24510",],sum)
+png("plot3xx.png",width=480,height=480)
+g <- ggplot(totalemissionBaltimore, aes(year, Emissions, color = type))
+g <- g + geom_line() + xlab("Year") + ylab("PM2.5 Emissions") + ggtitle("Total Emissions in Baltimore City from 1999 to 2008")
+print(g)
+dev.off()

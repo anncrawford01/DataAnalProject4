@@ -1,0 +1,72 @@
+## Exploratory Data Analysis
+## Course Project 2
+
+## Requires Data be saved in current working directory
+
+## Read in Data
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+## 6. Compare emissions from motor vehical sources in Baltimore City
+## with emissions from motor vehical sources in Los Angeles County,
+## CA. Which city has seen greater changes over time in motor
+## vehicle emissions?
+
+## Load ggplot2 and plyr
+
+library(ggplot2)
+
+library(plyr)
+
+## Obtain names of SCC which inclues "vehical" in EI.Sector
+
+vehicallab <- unique(grep("Vehicles", SCC$EI.Sector,
+ignore.case = T, value = T))
+
+## Subset SCC by vehical labels
+
+vehicalsub <- subset(SCC, EI.Sector %in% vehicallab)
+
+## Subset NEI by vehicalsub
+
+vehical <- subset(NEI, SCC %in% vehicalsub$SCC)
+
+## Subset vehical data to include only Baltimore City
+
+baltimore <- vehical[vehical$fips == "24510",]
+
+## Subset vehical data to obtain LA County
+
+LA <- vehical[vehical$fips == "06037",]
+
+## Create single data frame with Baltimore City and LA data
+
+BLA <- rbind(baltimore, LA)
+
+## Find motor vehical emissions for Baltimore City and LA County
+## by year
+
+BLApm2.5 <- ddply(BLA, .(year, fips), function(x) sum(x$Emissions))
+
+## Change "fips" to "County" and replace values with either Baltimore
+## City or LA County and change "V1" to "Emissions"
+
+colnames(BLApm2.5)[2] <- "County"
+
+colnames(BLApm2.5)[3] <- "Emissions"
+
+BLApm2.5$County <- ifelse(BLApm2.5$County == "06037", "Los Angeles", "Baltimore")
+
+## Plot results
+
+png("plot6.png")
+
+qplot(year, Emissions, data = BLApm2.5, color = County, geom = "line") + 
+ggtitle("Motor Vehical Emissions for Baltimore City and Los Angeles Counties")
+
+## Turn device off
+
+dev.off()
+
+## Answer: Los Angeles has seen greater change in motor vehical emissions over time,
+## having higher emissions overall and greater variability from 1999-2008.

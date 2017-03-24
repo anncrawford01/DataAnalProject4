@@ -1,0 +1,31 @@
+# Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
+
+library(dplyr)
+
+get_data <- function() {
+download.file("https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip", "exdata%2Fdata%2FNEI_data.zip")
+unzip("exdata%2Fdata%2FNEI_data.zip")
+}
+
+get_data()
+emissions_data <- readRDS("summarySCC_PM25.rds")
+classifications <- readRDS("Source_Classification_Code.rds")
+
+coal_classifications <- grep("coal", classifications$Short.Name, ignore.case = TRUE)
+coal_ids <- classifications[coal_classifications, ]
+
+coal_related_emissions <- merge(emissions_data, coal_ids, by = "SCC")
+
+coal_related_annual_emissions <- select(coal_related_emissions, Emissions, year) %>%
+group_by(year) %>%
+summarise_each(funs = "sum")
+
+png("plot4.png", 700)
+
+par(mfcol=c(1,2))
+with(coal_related_annual_emissions, 
+plot(year, Emissions, type = 'b', main = "Annual Coal Related Emmissions", ylab="Total Emissions",
+pch = 19, col = "red", lwd = 2))
+boxplot(Emissions ~ year, data=coal_related_emissions, ylim=c(0,10), main = "Emissions per source", ylab = "Emissions")
+
+dev.off()

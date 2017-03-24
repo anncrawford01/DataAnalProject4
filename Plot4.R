@@ -61,6 +61,7 @@ df1999 <- data.frame(statecode = names(meanbyState1999), mean = meanbyState1999)
 df2008 <- data.frame(statecode = names(meanbyState2008), mean = meanbyState2008) 
 
 coalStateEmissions <- merge(df1999, df2008, by = "statecode")
+##summary(coalStateEmissions)
 
 ##coalCombustionEmission <-transform(coalCombustionEmission, year = factor(year) )
 ##boxplot(log10(Emissions)~year, coalCombustionEmission)
@@ -68,12 +69,13 @@ coalStateEmissions <- merge(df1999, df2008, by = "statecode")
 ##qplot( fips, Emissions, data = coalCombustionEmission ,xlab = "state" , ylab = "Total PM2.5 Emissions (tons)" , main = "U.S. Coal Combustion Emissions",
   ##     facets = SCC.Level.One~. , geom="point")
 
+par(mfrow = c(1, 2), mar = c(4, 4, 2, 1))
 ##http://docs.ggplot2.org/current/geom_boxplot.html
-plot(rep(1999,48), coalStateEmissions[,2] ,data = coalStateEmissions , xlim = c(1997, 2009), main = "state coal", xlab = "year" , ylim = c(300,1000)) 
+plot(rep(1999,48), coalStateEmissions[,2] ,data = coalStateEmissions , xlim = c(1997, 2009), main = "Change State Coal Emissions", xlab = "year" , ylim = c(0,1000)) 
  points(rep(2008,48), coalStateEmissions[,3], data = coalStateEmissions ) 
  segments(rep(1999,48), coalStateEmissions[,2] , rep(2008,48), coalStateEmissions[,3] )
  
- plot(rep(1999,48), coalStateEmissions[,2] ,data = coalStateEmissions , xlim = c(1997, 2009), main = "state coal", xlab = "year" , ylim = c(0,300)) 
- points(rep(2008,48), coalStateEmissions[,3], data = coalStateEmissions ) 
- segments(rep(1999,48), coalStateEmissions[,2] , rep(2008,48), coalStateEmissions[,3] )
+ boxplot( log10(coalStateEmissions[,2:3]) ,data = coalStateEmissions , main = "State Mean Coal Emisions", xlab = "year" )
 
+ dev.copy(png, file = "plot4.png")   ## copy to png file
+ dev.off()

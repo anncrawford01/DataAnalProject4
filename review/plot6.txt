@@ -1,0 +1,43 @@
+# Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in Los Angeles County, California 
+# (fips == "06037"). Which city has seen greater changes over time in motor vehicle emissions?
+
+library(dplyr)
+
+get_data <- function() {
+download.file("https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip", "exdata%2Fdata%2FNEI_data.zip")
+unzip("exdata%2Fdata%2FNEI_data.zip")
+}
+
+get_data()
+emissions_data <- readRDS("summarySCC_PM25.rds")
+classifications <- readRDS("Source_Classification_Code.rds")
+
+motor_vehicle_classifications <- grep("motor", classifications$Short.Name, ignore.case = TRUE)
+motor_ids <- classifications[motor_vehicle_classifications, ]
+
+motor_vehicle_related_emissions <- merge(emissions_data, motor_ids, by = "SCC")
+
+motor_vehicle_related_emissions_baltimore <- filter(motor_vehicle_related_emissions, fips == "24510")
+annual_motor_emissions_baltimore <- select(motor_vehicle_related_emissions_baltimore, Emissions, year) %>%
+group_by(year) %>%
+summarise_each(funs = "sum")
+
+motor_vehicle_related_emissions_losang <- filter(motor_vehicle_related_emissions, fips == "06037")
+annual_motor_emissions_losang <- select(motor_vehicle_related_emissions_losang, Emissions, year) %>%
+group_by(year) %>%
+summarise_each(funs = "sum")
+
+png("plot6.png", width = 800)
+
+par(mfcol=c(2,2))
+with(annual_motor_emissions_baltimore, 
+plot(year, Emissions, type = 'b', main = "Baltimore Emissions", ylab="Total Emissions",
+pch = 19, col = "red", lwd = 2))
+boxplot(Emissions ~ year, data=motor_vehicle_related_emissions_baltimore, main = "Emissions per source", ylim=c(0,0.2), ylab = "Emissions")
+
+with(annual_motor_emissions_losang, 
+plot(year, Emissions, type = 'b', main = "LA Emissions", ylab="Total Emissions",
+pch = 19, col = "red", lwd = 2))
+boxplot(Emissions ~ year, data=motor_vehicle_related_emissions_losang, main = "Emissions per source", ylim=c(0,20), ylab = "Emissions")
+
+dev.off()

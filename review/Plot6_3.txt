@@ -1,0 +1,16 @@
+setwd( "C:/Users/betty/Desktop/coursera/exploratory data analysis/week-4")
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+library(ggplot2)
+NEISCC <- merge(NEI,SCC, by="SCC")
+
+subsetNEI <- NEI[(NEI$fips=="24510"|NEI$fips=="06037")& NEI$type=="ON-ROAD",]
+sumEmissionsbyYearandFips <-aggregate(Emissions~year+fips,subsetNEI,sum)
+png("plot6.png", width=480, height=480)
+g<-ggplot(sumEmissionsbyYearandFips,aes(factor(year),Emissions))
+g<- g+facet_grid(.~fips)
+g<- g+geom_bar(stat="identity")+xlab("Year") + ylab("PM2.5 Emissions")
++ ggtitle("Total emissions from motor vehicle sources in California vs Baltimore City")
+print(g)
+dev.off()

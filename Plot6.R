@@ -1,4 +1,4 @@
-##Plot6.^
+##Plot6.
 ## Compare emissions from motor vehicle sources in Baltimore City fips == "24510" 
 ## with emissions from motor vehicle sources 
 ## in Los Angeles County, California (fips == "06037").
@@ -51,10 +51,17 @@ VehicleEmissionBaltLA <-subset(VehicleEmission, fips == "24510" | fips == "06037
 
 ###Box plot
 ## http://t-redactyl.io/blog/2016/04/creating-plots-in-r-using-ggplot2-part-10-boxplots.html
+##p <- ggplot(VehicleEmissionBaltLA , aes(x=year, y=log10(Emissions)) ) + geom_boxplot() 
+##p <-p  + facet_grid(SCC.Level.Two~ fips)
+##p +  ggtitle("Vehicle Emissions Baltimore(24510) and Los Angeles(06037)") + ylab("PM2.5 Emissions")
+
+##par(mfrow = c(1, 2), mar = c(4, 4, 2, 1))
 p <- ggplot(VehicleEmissionBaltLA , aes(x=year, y=log10(Emissions)) ) + geom_boxplot() 
 p <-p  + facet_grid(SCC.Level.Two~ fips)
-p +  ggtitle("Vehicle Emissions Baltimore and Los Angeles") + ylab("PM2.5 Emissions")
+p +  ggtitle("Vehicle Emissions Los Angeles(06037) and Baltimore(24510)") + ylab("PM2.5 Emissions")
 
 
+dev.copy(png, file = "plot6.png")   ## copy to png file
+dev.off()
 
 
