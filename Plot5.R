@@ -1,15 +1,20 @@
 ##Plot5.R
 ##How have emissions from motor vehicle sources changed from 1999–2008 in Baltimore City?
 
+
+## Ann Crawford
+## 3/22/2017
+## Coursera Exploratory Data Analysis 
+
 ## emissions https://www.epa.gov/air-emissions-inventories
 ## documentation of data https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei
 
 ## grammar of graphics data to asesthetic
 ## geom, coordin, data, asestheics
 ## Dependencies
-##library(plyr)
+library(plyr)
 ##install.packages("ggplot2")
-##library(ggplot2)
+library(ggplot2)
 
 ## http://stackoverflow.com/questions/8305754/remove-all-variables-except-functions
 rm(list = setdiff(ls(), lsf.str()))
@@ -21,7 +26,7 @@ SCC <- readRDS("./data/source_Classification_Code.rds")
 
 # get the total Emissions for Each year
 
-table(NEI$year)
+##table(NEI$year)
 ## number of observations per year
 ##1999        2002           2005      2008 
 ##1,108,469   1,698,677   1,713,850   1,976,655 
@@ -41,7 +46,7 @@ VehicleEmission <-transform(VehicleEmission, year = factor(year) )
 
 ## use color instead of facet
 p <- ggplot(VehicleEmission, aes(x=year, y=log10(Emissions)), ylab = "year") + geom_boxplot(aes(colour =  SCC.Level.Two, notch = TRUE ))
-p <- p +  ggtitle("Vehicle Emissions Baltimore") + ylab("PM2.5 Emissions")
+p +  ggtitle("Vehicle Emissions Baltimore") + ylab("PM2.5 Emissions")
 
 dev.copy(png, file = "plot5.png")   ## copy to png file
 dev.off()

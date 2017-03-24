@@ -1,20 +1,24 @@
 ##Plot4.R
 ##Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
 
+
+## Ann Crawford
+## 3/22/2017
+## Coursera Exploratory Data Analysis 
+
 ## emissions https://www.epa.gov/air-emissions-inventories
 ## documentation of data https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei
-
-
-
 ## fips  first two digits are for the State and the last three identify the County
 ## https://catalog.data.gov/dataset/fips-state-codes
 ## grammar of graphics data to asesthetic
 ## geom, coordin, data, asestheics
+
 ## Dependencies
 ##library(plyr)
 library(dplyr)
 ##install.packages("ggplot2")
 ##library(ggplot2)
+
 ## remove all variables except functions
 ## http://stackoverflow.com/questions/8305754/remove-all-variables-except-functions
 rm(list = setdiff(ls(), lsf.str()))
